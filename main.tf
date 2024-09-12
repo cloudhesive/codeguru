@@ -1,40 +1,54 @@
 provider "aws" {
-  region = var.region
+  region = "us-east-1"
 }
 
-resource "aws_instance" "example" {
-  ami           = var.ami   
-  instance_type = var.instance_type
+resource "aws_instance" "insecure_ec2" {
+  ami                         = "ami-0c55b159cbfafe1f0"
+  instance_type               = "u-24tb1.metal"
+  associate_public_ip_address = true
+  key_name                    = "key-pair"
 
-  key_name = var.key_name
+  vpc_security_group_ids = [aws_security_group.insecure_sg.id]
 
-  # Tags para identificar la instancia
-  tags = {
-    Name = var.instance_name
+  root_block_device {
+    volume_size = 20
+    volume_type = "sc1"
+    encrypted   = false
   }
-  #EBS block with encrypted disk
+
   ebs_block_device {
-    device_name = "/dev/sdb"
-    volume_size = 10
-    volume_type = "gp2"
-    encrypted = true
+    device_name = "/dev/sdf"
+    volume_size = 50
+    volume_type = "sc1"
+    encrypted   = false
   }
 
-  # Bloque opcional de configuración del EBS
-  dynamic "ebs_block_device" {
-    for_each = var.ebs_block_devices
-    content {
-      device_name           = ebs_block_device.value.device_name
-      volume_size           = ebs_block_device.value.volume_size
-      delete_on_termination = ebs_block_device.value.delete_on_termination
-      volume_type           = ebs_block_device.value.volume_type
-    }
+  ebs_block_device {
+    device_name = "/dev/sdg"
+    volume_size = 100
+    volume_type = "sc1"
+    encrypted   = false
   }
 
-  # Conexión a través de un security group
-  vpc_security_group_ids = [var.security_group_id]
-  
-  # Subnet donde se lanza la instancia
-  subnet_id = var.subnet_id
-  
+  tags = {
+    Name = "Web production server"
+  }
+}
+
+resource "aws_security_group" "web_sg" {
+  name_prefix = "web-sg"
+
+  ingress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 65535
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
