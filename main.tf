@@ -22,6 +22,7 @@ resource "aws_instance" "example" {
 
   # Bloque opcional de configuración del EBS
   dynamic "ebs_block_device" {
+    
     for_each = var.ebs_block_devices
     content {
       device_name           = ebs_block_device.value.device_name
@@ -37,5 +38,5 @@ resource "aws_instance" "example" {
   # Subnet donde se lanza la instancia
   subnet_id = var.subnet_id
 
-  
+
 }
