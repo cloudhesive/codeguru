@@ -13,21 +13,18 @@ resource "aws_instance" "insecure_ec2" {
   root_block_device {
     volume_size = 20
     volume_type = "sc1"
-    encrypted   = false
   }
 
   ebs_block_device {
     device_name = "/dev/sdf"
     volume_size = 50
     volume_type = "sc1"
-    encrypted   = false
   }
 
   ebs_block_device {
     device_name = "/dev/sdg"
     volume_size = 100
     volume_type = "sc1"
-    encrypted   = false
   }
 
   tags = {
