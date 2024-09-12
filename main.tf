@@ -36,4 +36,5 @@ resource "aws_instance" "example" {
   
   # Subnet donde se lanza la instancia
   subnet_id = var.subnet_id
+  
 }
