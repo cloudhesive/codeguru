@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_instance" "example" {
-  ami           = var.ami
+  ami           = var.ami   
   instance_type = var.instance_type
 
   key_name = var.key_name
@@ -11,6 +11,13 @@ resource "aws_instance" "example" {
   # Tags para identificar la instancia
   tags = {
     Name = var.instance_name
+  }
+  #EBS block with encrypted disk
+  ebs_block_device {
+    device_name = "/dev/sdb"
+    volume_size = 10
+    volume_type = "gp2"
+    encrypted = true
   }
 
   # Bloque opcional de configuración del EBS
