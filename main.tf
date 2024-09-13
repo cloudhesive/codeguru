@@ -2,13 +2,13 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_instance" "insecure_ec2" {
+resource "aws_instance" "secure_ec2" {
   ami                         = "ami-0c55b159cbfafe1f0"
-  instance_type               = "u-24tb1.metal"
-  associate_public_ip_address = true
+  instance_type               = "t2.micro"
+  associate_public_ip_address = false
   key_name                    = "key-pair"
 
-  vpc_security_group_ids = [aws_security_group.insecure_sg.id]
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
 
   root_block_device {
     volume_size = 20
